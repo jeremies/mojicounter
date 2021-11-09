@@ -73,17 +73,23 @@ self.addEventListener('message', (event) => {
 
 const shareTargetHandler = async ({event}) => {
   const formData = await event.request.formData();
-  const textFile = formData.get('textFile');
+  const textFiles = formData.getAll('textFile');
   const cache = await caches.open('files');
-  await cache.put(
-    "current-file", 
-    new Response(textFile, {
-      headers: {
-        'content-length': textFile.size,
-        'content-type': textFile.type,
-      },
-    })
-  );
+
+  var i = 0;
+  for (const file of textFiles) {
+    await cache.put(
+      "current-file" + i, 
+      new Response(file, {
+        headers: {
+          'content-length': file.size,
+          'content-type': file.type,
+        },
+      })
+    );
+    i++;
+  }
+  
 
   return Response.redirect('/', 303);
 };

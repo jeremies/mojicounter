@@ -76,7 +76,7 @@ const shareTargetHandler = async ({event}) => {
   const textFiles = formData.getAll('textFile');
   const cache = await caches.open('files');
 
-  var i = 0;
+  let i = 0;
   for (const file of textFiles) {
     await cache.put(
       "current-file" + i, 

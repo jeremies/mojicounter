@@ -11,22 +11,24 @@ function App() {
     async function fetchData() {
       const cache = await caches.open('files');
       const requests = await cache.keys();
-      const response = await cache.match(requests[0]);
-      const responseBlob = await response.blob();
-      const text = await responseBlob.text();
-      const regex = emojiRegex();
       const emojiCounter = {};
-      for (const match of text.matchAll(regex)) {
-        const emoji = skinTone(match[0], 'none');
-        if (emojiCounter[emoji] === undefined) {
-          emojiCounter[emoji] = 1;
+      for (let request of requests) {
+        const response = await cache.match(request);
+        const responseBlob = await response.blob();
+        const text = await responseBlob.text();
+        const regex = emojiRegex();
+        for (const match of text.matchAll(regex)) {
+          const emoji = skinTone(match[0], 'none');
+          if (emojiCounter[emoji] === undefined) {
+            emojiCounter[emoji] = 1;
+          }
+          else {
+            emojiCounter[emoji]++
+          }
+          console.log(`Matched sequence ${ emoji } — code points: ${ [...emoji].length }`);
         }
-        else {
-          emojiCounter[emoji]++
-        }
-        console.log(`Matched sequence ${ emoji } — code points: ${ [...emoji].length }`);
+        console.log(emojiCounter);
       }
-      console.log(emojiCounter);
 
       var emojis = [];
       for (let emoji in emojiCounter) {

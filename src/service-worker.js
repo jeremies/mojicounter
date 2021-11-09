@@ -70,3 +70,20 @@ self.addEventListener('message', (event) => {
 });
 
 // Any other custom service worker logic can go here.
+
+const shareTargetHandler = async ({event}) => {
+  const formData = await event.request.formData();
+  const textFile = formData.get('textFile');
+  console.log(textFile);
+
+  const text = await textFile.text();
+
+  return Response.redirect("/", 303);
+};
+
+
+registerRoute(
+  '/_share-target',
+  shareTargetHandler,
+  'POST'
+);

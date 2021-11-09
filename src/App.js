@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import emojiRegex from 'emoji-regex';
 import skinTone from 'skin-tone';
 
 function App() {
+  const [emojis, setEmojis] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
@@ -34,7 +35,8 @@ function App() {
       emojis.sort(function(a, b) {
         return b[1] - a[1];
       });
-  
+
+      setEmojis(emojis);
       console.log(emojis);
     }
 
@@ -56,6 +58,13 @@ function App() {
         >
           Learn React
         </a>
+        <ul>
+          {
+            emojis.map(emoji => 
+              <li>{emoji[0]}: {emoji[1]}</li>
+            )
+          }
+        </ul>
       </header>
     </div>
   );

@@ -12,6 +12,8 @@ import { ExpirationPlugin } from 'workbox-expiration';
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
 import { StaleWhileRevalidate } from 'workbox-strategies';
+import emojiRegex from 'emoji-regex';
+import skinTone from 'skin-tone';
 
 clientsClaim();
 
@@ -77,8 +79,23 @@ const shareTargetHandler = async ({event}) => {
   console.log(textFile);
 
   const text = await textFile.text();
+  const regex = emojiRegex();
+  const emojiCounter = {};
+  for (const match of text.matchAll(regex)) {
+    const emoji = skinTone(match[0], 'none');
+    if (emojiCounter[emoji] === undefined) {
+      emojiCounter[emoji] = 1;
+    }
+    else {
+      emojiCounter[emoji]++
+    }
+    console.log(`Matched sequence ${ emoji } — code points: ${ [...emoji].length }`);
+  }
+  console.log(emojiCounter);
 
-  return Response.redirect("/", 303);
+  let searchParams = new URLSearchParams(emojiCounter);
+
+  return Response.redirect(`/?${searchParams.toString()}`, 303);
 };
 
 

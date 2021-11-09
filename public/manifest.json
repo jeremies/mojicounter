@@ -30,7 +30,7 @@
         "files": [
             {
                 "name": "textFile",
-                "accept": ["text/plain"]
+                "accept": ["*/*"]
             }
         ]
     }
